@@ -1,12 +1,12 @@
 # docker-teradata-ttu
 
-Dockerized Teradata Tools and Utilities (TTU):
+Dockerized Teradata Tools and Utilities (TTU).
 
 Notes:
 
 * Before building the docker image, you should have obtained/downloaded
-  Teradata TTU software. Unzip and place `TeradataToolsAndUtilities*.tar.gz`
-  file in the same directory as the Dockerfile.
+  Teradata TTU software. Extract `TeradataToolsAndUtilities*.tar.gz` file and
+  place it in the same directory as the Dockerfile.
 
 - All tools and utilities (including tdwallet) are installed.
 
