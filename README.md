@@ -1,4 +1,4 @@
-# docker-teradata-ttu
+# docker-teradata-ttu-base
 
 Dockerized Teradata Tools and Utilities (TTU).
 
