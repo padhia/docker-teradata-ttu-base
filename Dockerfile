@@ -6,7 +6,7 @@ RUN yum install -y file ksh glibc.i686 libgcc.i686 libstdc++.i686 nss-softokn-fr
     mkdir -p /tmp/ttu && \
     tar -xvaf /tmp/*tar.gz -C /tmp/ttu/ && \
     /tmp/ttu/setup.bat w && \
-	yum remove -y ksh file && \
+    yum remove -y ksh file && \
     yum clean all && \
     rm -rf /tmp/ttu/ /tmp/*tar.gz
 
