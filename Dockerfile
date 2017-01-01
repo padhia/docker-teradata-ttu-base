@@ -10,4 +10,6 @@ RUN yum install -y file ksh glibc.i686 libgcc.i686 libstdc++.i686 nss-softokn-fr
     yum clean all && \
     rm -rf /tmp/ttu/ /tmp/*tar.gz
 
+ENV ODBCINST /opt/teradata/client/ODBC_64/odbcinst.ini
+
 EXPOSE 1025
