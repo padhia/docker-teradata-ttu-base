@@ -1,0 +1,98 @@
+FROM ubuntu:rolling as builder
+
+COPY TeradataToolsAndUtilitiesBase__ubuntu_indep.*.tar.gz /tmp/
+
+WORKDIR /tmp/
+RUN apt-get update && apt-get -y upgrade && apt-get -y install lib32stdc++6
+RUN tar -xvaf TeradataToolsAndUtilitiesBase__ubuntu_indep.*.tar.gz
+
+RUN TeradataToolsAndUtilitiesBase/setup.bat w
+
+FROM ubuntu:rolling
+
+RUN apt-get update && apt-get -y upgrade && apt-get -y install lib32stdc++6
+
+COPY --from=builder /opt/ /opt/
+COPY --from=builder /etc/profile /etc/services /etc/csh.login /etc/
+COPY --from=builder /etc/init.d/tdwallet* /etc/init.d/
+
+RUN chmod u+s /opt/teradata/client/*/.genuine_TTU && \
+    mkdir -p /etc/rc.d/ /etc/rc.d/rc2.d/ /etc/rc.d/rc3.d/ /etc/rc.d/rc4.d/ /etc/rc.d/rc5.d/ && \
+    ln -s /etc/init.d/tdwallet16.20 /etc/rc.d/rc2.d/S50tdwallet16.20 && \
+    ln -s /etc/init.d/tdwallet16.20 /etc/rc.d/rc3.d/S50tdwallet16.20 && \
+    ln -s /etc/init.d/tdwallet16.20 /etc/rc.d/rc4.d/S50tdwallet16.20 && \
+    ln -s /etc/init.d/tdwallet16.20 /etc/rc.d/rc5.d/S50tdwallet16.20 && \
+    ln -s /opt/teradata/client/16.20/bin/bteq                     /usr/bin/bteq                   && \
+    ln -s /opt/teradata/client/16.20/bin/fastload                 /usr/bin/fastload               && \
+    ln -s /opt/teradata/client/16.20/bin/fexp                     /usr/bin/fexp                   && \
+    ln -s /opt/teradata/client/16.20/bin/mload                    /usr/bin/mload                  && \
+    ln -s /opt/teradata/client/16.20/bin/ppcmain64                /usr/bin/ppcmain                && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/tbuild                 && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/tdload                 && \
+    ln -s /opt/teradata/client/16.20/bin/tdlog                    /usr/bin/tdlog                  && \
+    ln -s /opt/teradata/client/16.20/bin/tdwallet                 /usr/bin/tdwallet               && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/tlogview               && \
+    ln -s /opt/teradata/client/16.20/bin/tpump                    /usr/bin/tpump                  && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/twbcmd                 && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/twbertbl               && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/twbkill                && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/twbpath                && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/twbrmcp                && \
+    ln -s /opt/teradata/client/16.20/bin/tptlaunch                /usr/bin/twbstat                && \
+    ln -s /opt/teradata/client/16.20/lib64/libazureaxsmod.so      /usr/lib/libazureaxsmod.so      && \
+    ln -s /opt/teradata/client/16.20/lib64/libcliv2.so            /usr/lib/libcliv2.so            && \
+    ln -s /opt/teradata/client/16.20/lib64/libddicu27.so          /usr/lib/libddicu27.so          && \
+    ln -s /opt/teradata/client/16.20/lib64/libicudatatd.so.52.1   /usr/lib/libicudatatd.so        && \
+    ln -s /opt/teradata/client/16.20/lib64/libicudatatd.so.52.1   /usr/lib/libicudatatd.so.52     && \
+    ln -s /opt/teradata/client/16.20/lib64/libicui18ntd.so.52.1   /usr/lib/libicui18ntd.so        && \
+    ln -s /opt/teradata/client/16.20/lib64/libicui18ntd.so.52.1   /usr/lib/libicui18ntd.so.52     && \
+    ln -s /opt/teradata/client/16.20/lib64/libicuiotd.so.52.1     /usr/lib/libicuiotd.so          && \
+    ln -s /opt/teradata/client/16.20/lib64/libicuiotd.so.52.1     /usr/lib/libicuiotd.so.52       && \
+    ln -s /opt/teradata/client/16.20/lib64/libiculetd.so.52.1     /usr/lib/libiculetd.so          && \
+    ln -s /opt/teradata/client/16.20/lib64/libiculetd.so.52.1     /usr/lib/libiculetd.so.52       && \
+    ln -s /opt/teradata/client/16.20/lib64/libiculxtd.so.52.1     /usr/lib/libiculxtd.so          && \
+    ln -s /opt/teradata/client/16.20/lib64/libiculxtd.so.52.1     /usr/lib/libiculxtd.so.52       && \
+    ln -s /opt/teradata/client/16.20/lib64/libicuuctd.so.52.1     /usr/lib/libicuuctd.so          && \
+    ln -s /opt/teradata/client/16.20/lib64/libicuuctd.so.52.1     /usr/lib/libicuuctd.so.52       && \
+    ln -s /opt/teradata/client/16.20/lib64/libjmsam.so            /usr/lib/libjmsam.so            && \
+    ln -s /opt/teradata/client/16.20/lib64/libkafkaaxsmod.so      /usr/lib/libkafkaaxsmod.so      && \
+    ln -s /opt/teradata/client/16.20/lib64/libmqs.so              /usr/lib/libmqs.so              && \
+    ln -s /opt/teradata/client/16.20/lib64/libmqsc.so             /usr/lib/libmqsc.so             && \
+    ln -s /opt/teradata/client/16.20/lib64/libodbc.so             /usr/lib/libodbc.so             && \
+    ln -s /opt/teradata/client/16.20/lib64/libodbcinst.so         /usr/lib/libodbcinst.so         && \
+    ln -s /opt/teradata/client/16.20/lib64/libpm.so               /usr/lib/libpm.so               && \
+    ln -s /opt/teradata/client/16.20/lib64/libppruntim.so         /usr/lib/libppruntim.so         && \
+    ln -s /opt/teradata/client/16.20/lib64/libs3axsmod.so         /usr/lib/libs3axsmod.so         && \
+    ln -s /opt/teradata/client/16.20/lib64/libtdusr.so            /usr/lib/libtdusr.so            && \
+    ln -s /opt/teradata/client/16.20/lib64/libtelapi.so           /usr/lib/libtelapi.so           && \
+    ln -s /opt/teradata/client/16.20/lib64/np_axsmod.so           /usr/lib/np_axsmod.so           && \
+    ln -s /opt/teradata/client/16.20/lib64/odbccurs.so            /usr/lib/odbccurs.so            && \
+    ln -s /opt/teradata/client/16.20/lib/libcliv2.so              /usr/lib32/libcliv2.so          && \
+    ln -s /opt/teradata/client/16.20/lib/libicudatatd.so.52.1     /usr/lib32/libicudatatd.so      && \
+    ln -s /opt/teradata/client/16.20/lib/libicudatatd.so.52.1     /usr/lib32/libicudatatd.so.52   && \
+    ln -s /opt/teradata/client/16.20/lib/libicui18ntd.so.52.1     /usr/lib32/libicui18ntd.so      && \
+    ln -s /opt/teradata/client/16.20/lib/libicui18ntd.so.52.1     /usr/lib32/libicui18ntd.so.52   && \
+    ln -s /opt/teradata/client/16.20/lib/libicuiotd.so.52.1       /usr/lib32/libicuiotd.so        && \
+    ln -s /opt/teradata/client/16.20/lib/libicuiotd.so.52.1       /usr/lib32/libicuiotd.so.52     && \
+    ln -s /opt/teradata/client/16.20/lib/libiculetd.so.52.1       /usr/lib32/libiculetd.so        && \
+    ln -s /opt/teradata/client/16.20/lib/libiculetd.so.52.1       /usr/lib32/libiculetd.so.52     && \
+    ln -s /opt/teradata/client/16.20/lib/libiculxtd.so.52.1       /usr/lib32/libiculxtd.so        && \
+    ln -s /opt/teradata/client/16.20/lib/libiculxtd.so.52.1       /usr/lib32/libiculxtd.so.52     && \
+    ln -s /opt/teradata/client/16.20/lib/libicuuctd.so.52.1       /usr/lib32/libicuuctd.so        && \
+    ln -s /opt/teradata/client/16.20/lib/libicuuctd.so.52.1       /usr/lib32/libicuuctd.so.52     && \
+    ln -s /opt/teradata/client/16.20/lib/libivicu27.so            /usr/lib32/libivicu27.so        && \
+    ln -s /opt/teradata/client/16.20/lib/libjmsam.so              /usr/lib32/libjmsam.so          && \
+    ln -s /opt/teradata/client/16.20/lib/libmqs.so                /usr/lib32/libmqs.so            && \
+    ln -s /opt/teradata/client/16.20/lib/libmqsc.so               /usr/lib32/libmqsc.so           && \
+    ln -s /opt/teradata/client/16.20/lib/libodbc.so               /usr/lib32/libodbc.so           && \
+    ln -s /opt/teradata/client/16.20/lib/libodbcinst.so           /usr/lib32/libodbcinst.so       && \
+    ln -s /opt/teradata/client/16.20/lib/libpm.so                 /usr/lib32/libpm.so             && \
+    ln -s /opt/teradata/client/16.20/lib/libppruntim.so           /usr/lib32/libppruntim.so       && \
+    ln -s /opt/teradata/client/16.20/lib/libtdusr.so              /usr/lib32/libtdusr.so          && \
+    ln -s /opt/teradata/client/16.20/lib/libtelapi.so             /usr/lib32/libtelapi.so         && \
+    ln -s /opt/teradata/client/16.20/lib/np_axsmod.so             /usr/lib32/np_axsmod.so         && \
+    ln -s /opt/teradata/client/16.20/lib/odbccurs.so              /usr/lib32/odbccurs.so
+
+ENV ODBCINST /opt/teradata/client/ODBC_64/odbcinst.ini
+
+EXPOSE 1025

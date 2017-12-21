@@ -1,14 +1,15 @@
-FROM centos:centos7
+FROM ubuntu:rolling
 
-COPY TeradataToolsAndUtilities*.tar.gz /tmp/
+COPY TeradataToolsAndUtilitiesBase__ubuntu_indep.*.tar.gz /tmp/
 
-RUN yum install -y file ksh glibc.i686 libgcc.i686 libstdc++.i686 nss-softokn-freebl.i686 && \
-    mkdir -p /tmp/ttu && \
-    tar -xvaf /tmp/*tar.gz -C /tmp/ttu/ && \
-    /tmp/ttu/setup.bat w && \
-    yum remove -y ksh file && \
-    yum clean all && \
-    rm -rf /tmp/ttu/ /tmp/*tar.gz
+WORKDIR /tmp/
+
+RUN apt-get update && apt-get -y upgrade && apt-get -y install lib32stdc++6
+RUN tar -xvaf TeradataToolsAndUtilitiesBase__ubuntu_indep.*.tar.gz && \
+    TeradataToolsAndUtilitiesBase/setup.bat w && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf TeradataToolsAndUtilitiesBase && \
+    rm -f TeradataToolsAndUtilitiesBase__ubuntu_indep.*.tar.gz
 
 ENV ODBCINST /opt/teradata/client/ODBC_64/odbcinst.ini
 
