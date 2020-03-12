@@ -1,17 +1,28 @@
 #!/bin/sh
 
-CMD="$(basename $0)"
+# mount all paths from TTUMOUNTS variable (paths must be separated by : -- like in PATH variable). Defaults to $HOME
+mount_opts() {
+	if [ -z "$TTUMOUNTS" ]; then
+		TTUMOUNTS="$HOME"
+	fi
 
-# set TTUMOUNT variable to mount a host path, for example loading data. Defaults to $HOME
-if [ -z "$TTUMOUNT" ]; then
-    TTUMOUNT="$HOME"
-fi
+	OLD_IFS="$IFS"
+	IFS=":"
+	for M in $TTUMOUNTS; do
+		echo --mount type=bind,source="$M",target="$M"
+	done
+	IFS="$OLD_IFS"
+}
+
+CMD="$(basename $0)"
 
 docker run -i \
 	--rm \
-	-h ttu \
-	--mount type=bind,source="$TTUMOUNT",target="$TTUMOUNT" \
+	-h "$CMD" \
+	$(mount_opts) \
 	--net=host \
 	--security-opt seccomp:unconfined \
 	--name docker-ttu \
-	ttu /bin/sh -c "cd $PWD;$CMD \"\$@\"" "$CMD" "$@"
+	--workdir "$PWD" \
+	--user "$(id -u):$(id -g)" \
+	ttu "$CMD" "$@"

@@ -17,4 +17,4 @@ ENV ODBCINST /opt/teradata/client/ODBC_64/odbcinst.ini
 
 EXPOSE 1025
 
-CMD /opt/teradata/client/*/bin/ttulistproducts_unix.sh
+CMD bash /opt/teradata/client/*/bin/ttulistproducts_unix.sh
