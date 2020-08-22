@@ -2,22 +2,27 @@
 
 Dockerized Teradata Tools and Utilities (TTU).
 
-Notes:
+Steps to build a TTU Docker image:
 
-* Before building the docker image, you should have obtained/downloaded
-  Teradata TTU software.
-* Extract `TeradataToolsAndUtilities*.tar.gz` file and place it in the same
-  directory as the Dockerfile.
-* Make sure the directory has only desired version of the TTU software.
-* All tools and utilities (including tdwallet) are installed.
-* Tested with TTU versions:
-  - 16.20.xx.00 xx => {00,01,02}
+1. Make sure `docker` is installed
+1. Download the latest Teradata TTU software package (16.20 or later) for **Ubuntu** from [here](https://downloads.teradata.com/download/tools/teradata-tools-and-utilities-linux-installation-package-0) and place in the same directory as the `Dockerfile` file
+1. To build the default TTU docker image containing all tools and utilities:
+```sh
+docker build -t ttu .
+```
 
-Building the docker image:<br/>
-`docker build -t ttu .`
+You can create custom docker images to include only selected tools. For example, following commands will build images containing `bteq` and `tdwallet`, and `TPT` and `tdwallet` respectively.
+```sh
+docker build --build-arg cmd=bteq --build-arg tools="bteq tdwallet" -t bteq .
+docker build --build-arg cmd=tbuild --build-arg tools="tptbase tptstream tdwallet" -t tpt .
+```
 
-Example:<br/>
-`docker run -i --rm --net=host -v $HOME:$HOME -v /tmp:/tmp -e "HOME=$HOME" ttu bteq < test.bteq`
+How to run docker images:
+```sh
+docker run -i --rm --net=host -v $HOME:$HOME -v /tmp:/tmp -e "HOME=$HOME" ttu bteq < test.bteq
+```
 
-Include `bin` folder in your host's `PATH` to provide seamless access to
-dockerized TTU commands
+For a more seamless access, customize the scripts in the `bin` folder and include in your host's `PATH`. Assuming the `bin` folder is in path, you can then run:
+```sh
+bteq < test.bteq
+```

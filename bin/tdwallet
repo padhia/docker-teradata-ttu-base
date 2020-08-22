@@ -1,0 +1,12 @@
+#!/bin/sh
+
+docker run -i \
+	--rm \
+    -it \
+	-h "$CMD" \
+	--mount type=volume,src=wallets,dst=/opt/teradata/client/tdwallet/wallets \
+    --net=host \
+	--security-opt seccomp:unconfined \
+	--name docker-ttu \
+	--workdir "$PWD" \
+	ttu tdwallet "$@"
