@@ -1,16 +1,15 @@
 FROM ubuntu:latest
 
-ARG tools="w"
+ARG tools="a"
 ARG cmd="/usr/bin/ttuversion"
 
 COPY TeradataToolsAndUtilitiesBase__ubuntu_*.tar.gz /tmp/
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install ksh lib32stdc++6 && \
     cd /tmp && \
     tar -xvaf TeradataToolsAndUtilitiesBase__ubuntu_*.tar.gz && \
-    TeradataToolsAndUtilitiesBase/setup.bat $tools && \
+    TeradataToolsAndUtilitiesBase/setup.sh $tools && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf TeradataToolsAndUtilitiesBase && \
     rm -f TeradataToolsAndUtilitiesBase__ubuntu_*.tar.gz && \

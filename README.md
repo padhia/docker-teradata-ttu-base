@@ -5,7 +5,7 @@ Dockerized Teradata Tools and Utilities (TTU).
 Steps to build a TTU Docker image:
 
 1. Make sure `docker` is installed
-1. Download the latest Teradata TTU software package (16.20 or later) for **Ubuntu** from [here](https://downloads.teradata.com/download/tools/teradata-tools-and-utilities-linux-installation-package-0) and place in the same directory as the `Dockerfile` file
+1. Download the latest Teradata TTU software package (17.10 or later) for **Ubuntu** from [here](https://downloads.teradata.com/download/tools/teradata-tools-and-utilities-linux-installation-package-0) and place in the same directory as the `Dockerfile` file
 1. To build the default TTU docker image containing all tools and utilities:
 ```sh
 docker build -t ttu .
